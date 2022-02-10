@@ -31,6 +31,47 @@
 /// THE SOFTWARE.
 
 import UIKit
+class Pokemon {
+	var name: String
+	init(name: String) {
+		self.name = name
+	}
+	deinit { print("\(self) escaped!") }
+}
+
+struct StructPokemon {
+	var name: String
+	init(name: String) {
+		self.name = name
+	}
+}
+func address(of object: UnsafeRawPointer) -> String{
+	let address = Int(bitPattern: object)
+	return String(format: "%p", address)
+}
+
+func delay(_ seconds: Int, closure: @escaping ()->()) {
+	let time = DispatchTime.now() + .seconds(seconds)
+	DispatchQueue.main.asyncAfter(deadline: time) {
+		print("🕑")
+		closure()
+	}
+}
+
+func demo1() {
+	var pokemon = StructPokemon(name: "Pikachu")
+	print("1before closure: \(pokemon)")
+	let addr = address(of: &pokemon.name)
+	print("addr1: \(addr)")
+	delay(1) { [pokemon] in
+//		let addrr = address(of: &pokemon.name)
+//		print("addr1: \(addrr)")
+		print("1inside closure: \(pokemon)")
+		print("============================================================")
+	}
+	pokemon.name = "Mewtwo"
+	print("1after closure: \(pokemon.name)")
+}
 
 class ViewController: UIViewController {
   var defaults = UserDefaults.standard
